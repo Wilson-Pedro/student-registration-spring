@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +51,11 @@ public class StudentRegistartionSource {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not foud!");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(studentOptional.get());
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Student> updateStuden(@PathVariable UUID id, @RequestBody @Valid Student student){
+		student = service.update(id, student);
+		return ResponseEntity.ok().body(student);
 	}
 }

@@ -11,6 +11,7 @@ import com.wamk.studantregistration.models.Student;
 import com.wamk.studantregistration.repositories.StudentRegistrationRepository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 public class StudentRegistrationService {
@@ -29,6 +30,17 @@ public class StudentRegistrationService {
 
 	public Optional<Student> findById(UUID id) {
 		return repository.findById(id);
+	}
+
+	public Student update(UUID id, @Valid Student student) {
+		Student entity = repository.getReferenceById(id);
+		updateData(entity, student);
+		return repository.save(entity);
+	}
+
+	private void updateData(Student entity, @Valid Student student) {
+		entity.setName(student.getName());
+		entity.setPeriod(student.getPeriod());
 	}
 
 }
