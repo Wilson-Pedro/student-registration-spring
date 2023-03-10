@@ -8,4 +8,5 @@ import com.wamk.studantregistration.models.Student;
 
 public interface StudentRegistrationRepository extends JpaRepository<Student, UUID>{
 
+	boolean existsByRegistration(String registration);
 }

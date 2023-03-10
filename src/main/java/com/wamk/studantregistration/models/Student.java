@@ -23,7 +23,7 @@ public class Student implements Serializable{
 	@Column(nullable = false, unique = false, length = 255)
 	private String name;
 	
-	@Column(nullable = false, unique = false, length = 9)
+	@Column(nullable = false, unique = true, length = 9)
 	private String registration;
 	
 	@Column(nullable = false, unique = false)

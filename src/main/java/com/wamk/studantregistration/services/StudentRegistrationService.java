@@ -48,4 +48,8 @@ public class StudentRegistrationService {
 		
 	}
 
+	public boolean existsByRegistration(String registration) {
+		return repository.existsByRegistration(registration);
+	}
+
 }

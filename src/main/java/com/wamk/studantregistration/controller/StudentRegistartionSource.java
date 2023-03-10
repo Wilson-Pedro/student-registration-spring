@@ -30,24 +30,27 @@ import jakarta.validation.Valid;
 public class StudentRegistartionSource {
 	
 	@Autowired
-	private StudentRegistrationService service;
+	private StudentRegistrationService studentService;
 	
 	@PostMapping
 	public ResponseEntity<Object> saveStudent(@RequestBody @Valid StudentDTO studentDTO){
+		if(studentService.existsByRegistration(studentDTO.getRegistration())) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Registration already in use!");
+		}
 		var student = new Student();
 		BeanUtils.copyProperties(studentDTO, student);
 		student.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(student));
+		return ResponseEntity.status(HttpStatus.CREATED).body(studentService.save(student));
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<Student>> findAllStudents(){
-		return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(studentService.findAll());
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Object> findById(@PathVariable UUID id){
-		Optional<Student> studentOptional = service.findById(id);
+		Optional<Student> studentOptional = studentService.findById(id);
 		if(!studentOptional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not foud!");
 		}
@@ -56,13 +59,13 @@ public class StudentRegistartionSource {
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Student> updateStuden(@PathVariable UUID id, @RequestBody @Valid Student student){
-		student = service.update(id, student);
+		student = studentService.update(id, student);
 		return ResponseEntity.ok().body(student);
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Student> deleteStudent(@PathVariable UUID id){
-		service.deleteById(id);
+		studentService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 }
