@@ -3,7 +3,6 @@ package com.wamk.studantregistration.controller;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -26,7 +25,7 @@ import com.wamk.studantregistration.services.StudentRegistrationService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/student-registration")
+@RequestMapping("/students")
 public class StudentRegistartionSource {
 	
 	@Autowired
@@ -49,12 +48,9 @@ public class StudentRegistartionSource {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Object> findById(@PathVariable UUID id){
-		Optional<Student> studentOptional = studentService.findById(id);
-		if(!studentOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not foud!");
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(studentOptional.get());
+	public ResponseEntity<Student> findById(@PathVariable UUID id){
+		Student student = studentService.findById(id);
+		return ResponseEntity.ok().body(student);
 	}
 	
 	@PutMapping(value = "/{id}")
