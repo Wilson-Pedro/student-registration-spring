@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "TB_ESTUDENT")
@@ -20,16 +21,16 @@ public class Student implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
-	@Column(nullable = false, unique = false, length = 255)
+	@NotBlank(message = "name is mandatory")
 	private String name;
 	
-	@Column(nullable = false, unique = true, length = 9)
+	@NotBlank(message = "registration is mandatory")
 	private String registration;
 	
-	@Column(nullable = false, unique = false)
+	@NotBlank(message = "period is mandatory")
 	private String period;
 	
-	@Column(nullable = false, unique = false)
+	@NotBlank(message = "course is mandatory")
 	private String course;
 	
 	@Column(nullable = false, unique = false)

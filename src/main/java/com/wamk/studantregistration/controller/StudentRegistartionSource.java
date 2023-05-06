@@ -32,7 +32,7 @@ public class StudentRegistartionSource {
 	private StudentRegistrationService studentService;
 	
 	@PostMapping
-	public ResponseEntity<Object> saveStudent(@RequestBody @Valid StudentDTO studentDTO){
+	public ResponseEntity<Object> saveStudent(@Valid @RequestBody StudentDTO studentDTO){
 		if(studentService.existsByRegistration(studentDTO.getRegistration())) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Registration already in use!");
 		}
@@ -54,7 +54,8 @@ public class StudentRegistartionSource {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Student> updateStuden(@PathVariable UUID id, @RequestBody @Valid Student student){
+	public ResponseEntity<Student> updateStuden(@PathVariable UUID id, 
+			@RequestBody @Valid Student student){
 		student = studentService.update(id, student);
 		return ResponseEntity.ok().body(student);
 	}

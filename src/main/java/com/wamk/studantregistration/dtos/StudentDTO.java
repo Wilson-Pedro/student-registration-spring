@@ -4,13 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 
 public class StudentDTO {
 	
-	@NotBlank
+	@NotBlank@NotBlank(message = "name is mandatory")
 	private String name;
-	@NotBlank
+	
+	@NotBlank(message = "registration is mandatory")
 	private String registration;
-	@NotBlank
+	
+	@NotBlank(message = "period is mandatory")
 	private String period;
-	@NotBlank
+	
+	@NotBlank(message = "course is mandatory")
 	private String course;
 	
 	public StudentDTO() {

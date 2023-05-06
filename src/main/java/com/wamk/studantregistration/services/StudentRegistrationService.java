@@ -44,6 +44,7 @@ public class StudentRegistrationService {
 		entity.setPeriod(student.getPeriod());
 	}
 
+	@Transactional
 	public void deleteById(UUID id) {
 		repository.deleteById(id);
 		
