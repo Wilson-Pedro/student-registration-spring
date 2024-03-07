@@ -61,4 +61,16 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
+	
+	protected ResponseEntity<Problema> handleMethodArgumentNotValid(){
+
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		Problema problema = new Problema();
+		problema.setStatus(status.value());
+		problema.setDataHora(OffsetDateTime.now());
+		problema.setTitulo("Registration already in use!");
+		
+		return ResponseEntity.status(status).body(problema);
+	}
 }

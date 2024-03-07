@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.wamk.studantregistration.dtos.StudentDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,13 +43,19 @@ public class Student implements Serializable{
 	
 	public Student(UUID id, String name, String registration, String period, String course,
 			LocalDateTime registrationDate) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.registration = registration;
 		this.period = period;
 		this.course = course;
 		this.registrationDate = registrationDate;
+	}
+	
+	public Student(StudentDTO studentDTO) {
+		name = studentDTO.getName();
+		registration = studentDTO.getRegistration();
+		period = studentDTO.getPeriod();
+		course = studentDTO.getCourse();
 	}
 
 	public UUID getId() {

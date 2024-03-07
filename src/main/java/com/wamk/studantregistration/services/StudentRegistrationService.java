@@ -1,5 +1,7 @@
 package com.wamk.studantregistration.services;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.wamk.studantregistration.models.Student;
 import com.wamk.studantregistration.repositories.StudentRegistrationRepository;
 import com.wamk.studantregistration.services.exceptions.EntityNotFoundException;
+import com.wamk.studantregistration.services.exceptions.RegistrationException;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,11 +19,15 @@ import jakarta.validation.Valid;
 @Service
 public class StudentRegistrationService {
 
+
 	@Autowired
 	private StudentRegistrationRepository repository;
 	
 	@Transactional
 	public Student save(Student student) {
+		if(repository.existsByRegistration(student.getRegistration()))
+			throw new RegistrationException();
+		student.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
 		return repository.save(student);
 	}
 
@@ -34,24 +41,21 @@ public class StudentRegistrationService {
 	}
 
 	public Student update(UUID id, @Valid Student student) {
-		Student entity = repository.getReferenceById(id);
-		updateData(entity, student);
-		return repository.save(entity);
+		Student studentUpdated = repository.getReferenceById(id);
+		studentUpdated = updateData(studentUpdated, student);
+		return repository.save(studentUpdated);
 	}
 
-	private void updateData(Student entity, @Valid Student student) {
+	private Student updateData(Student entity, Student student) {
 		entity.setName(student.getName());
 		entity.setPeriod(student.getPeriod());
+		entity.setRegistration(student.getRegistration());
+		return entity;
 	}
 
 	@Transactional
 	public void deleteById(UUID id) {
-		repository.deleteById(id);
-		
+		repository.delete(repository.findById(id).orElseThrow
+				(() -> new EntityNotFoundException("Id not found: " + id)));
 	}
-
-	public boolean existsByRegistration(String registration) {
-		return repository.existsByRegistration(registration);
-	}
-
 }

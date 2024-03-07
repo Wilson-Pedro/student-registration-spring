@@ -1,11 +1,8 @@
 package com.wamk.studantregistration.controller;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,31 +30,26 @@ public class StudentRegistartionSource {
 	
 	@PostMapping
 	public ResponseEntity<Object> saveStudent(@Valid @RequestBody StudentDTO studentDTO){
-		if(studentService.existsByRegistration(studentDTO.getRegistration())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Registration already in use!");
-		}
-		var student = new Student();
-		BeanUtils.copyProperties(studentDTO, student);
-		student.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-		return ResponseEntity.status(HttpStatus.CREATED).body(studentService.save(student));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(studentService.save(new Student(studentDTO)));
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<Student>> findAllStudents(){
-		return ResponseEntity.status(HttpStatus.OK).body(studentService.findAll());
+		return ResponseEntity.ok(studentService.findAll());
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Student> findById(@PathVariable UUID id){
 		Student student = studentService.findById(id);
-		return ResponseEntity.ok().body(student);
+		return ResponseEntity.ok(student);
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Student> updateStuden(@PathVariable UUID id, 
-			@RequestBody @Valid Student student){
-		student = studentService.update(id, student);
-		return ResponseEntity.ok().body(student);
+	public ResponseEntity<StudentDTO> updateStuden(@PathVariable UUID id, 
+			@RequestBody @Valid StudentDTO studentDTO){
+		studentService.update(id, new Student(studentDTO));
+		return ResponseEntity.ok(studentDTO);
 	}
 	
 	@DeleteMapping(value = "/{id}")
