@@ -19,7 +19,6 @@ import jakarta.validation.Valid;
 @Service
 public class StudentRegistrationService {
 
-
 	@Autowired
 	private StudentRegistrationRepository repository;
 	
@@ -27,6 +26,7 @@ public class StudentRegistrationService {
 	public Student save(Student student) {
 		if(repository.existsByRegistration(student.getRegistration()))
 			throw new RegistrationException();
+		
 		student.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
 		return repository.save(student);
 	}
