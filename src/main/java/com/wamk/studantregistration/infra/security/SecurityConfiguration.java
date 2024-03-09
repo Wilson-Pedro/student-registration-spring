@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -22,14 +23,20 @@ public class SecurityConfiguration {
 	private SecurityFilter securityFilter;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-						.requestMatchers(HttpMethod.POST, "/students").hasRole("ADMIN")
+						//AUTHENTICATION
+						.requestMatchers(new AntPathRequestMatcher("/auth/login", HttpMethod.POST.toString())).permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/auth/register", HttpMethod.POST.toString())).permitAll()
+						//STUDENTS
+						.requestMatchers(new AntPathRequestMatcher("/students", HttpMethod.POST.toString())).hasRole("ADMIN")
+						.requestMatchers(new AntPathRequestMatcher("/students", HttpMethod.GET.toString())).hasRole("ADMIN")
+						.requestMatchers(new AntPathRequestMatcher("/students/{id}", HttpMethod.GET.toString())).hasAnyRole("ADMIN", "USER")
+						.requestMatchers(new AntPathRequestMatcher("/students/{id}", HttpMethod.PUT.toString())).hasRole("ADMIN")
+						.requestMatchers(new AntPathRequestMatcher("/students/{id}", HttpMethod.DELETE.toString())).hasRole("ADMIN")
 						.anyRequest().authenticated()
 						)
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -37,12 +44,12 @@ public class SecurityConfiguration {
 	}
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
     
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
     	return new BCryptPasswordEncoder();
     }
 }
