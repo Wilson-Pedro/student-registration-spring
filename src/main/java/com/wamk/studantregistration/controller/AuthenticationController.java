@@ -31,16 +31,6 @@ public class AuthenticationController {
 	
 	@Autowired
 	private TokenService tokenService;
-
-	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-		var auth = this.authenticationManager.authenticate(usernamePassword);
-		
-		var token = tokenService.generateToken((User) auth.getPrincipal());
-		
-		return ResponseEntity.ok(new LoginResponseDTO(token));
-	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<Object> register(@RequestBody @Valid RegisterDTO data) {
@@ -52,5 +42,15 @@ public class AuthenticationController {
 		userRepository.save(newUser);
 		
 		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO data) {
+		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+		var auth = this.authenticationManager.authenticate(usernamePassword);
+		
+		var token = tokenService.generateToken((User) auth.getPrincipal());
+		
+		return ResponseEntity.ok(new LoginResponseDTO(token));
 	}
 }
