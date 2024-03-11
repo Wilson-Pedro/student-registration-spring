@@ -1,9 +1,11 @@
 package com.wamk.studantregistration.services.exceptions;
 
+import java.util.UUID;
+
 public class EntityNotFoundException extends RuntimeException{
 	private static final long serialVersionUID = 1L;
 
-	public EntityNotFoundException(String msg) {
-		super(msg);
+	public EntityNotFoundException(UUID id) {
+		super();
 	}
 }

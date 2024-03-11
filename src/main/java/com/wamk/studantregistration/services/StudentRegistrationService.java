@@ -37,7 +37,7 @@ public class StudentRegistrationService {
 
 	public Student findById(UUID id) {
 		return repository.findById(id).orElseThrow
-				(() -> new EntityNotFoundException("Id not found: " + id));
+				(() -> new EntityNotFoundException(id));
 	}
 
 	public Student update(UUID id, @Valid Student student) {
@@ -55,7 +55,7 @@ public class StudentRegistrationService {
 
 	@Transactional
 	public void deleteById(UUID id) {
-		repository.delete(repository.findById(id).orElseThrow
-				(() -> new EntityNotFoundException("Id not found: " + id)));
+		repository.delete(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(id)));
 	}
 }

@@ -53,7 +53,7 @@ public class StudentRegistartionSource {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Student> deleteStudent(@PathVariable UUID id){
+	public ResponseEntity<Void> deleteStudent(@PathVariable UUID id){
 		studentService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

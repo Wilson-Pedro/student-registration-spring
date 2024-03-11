@@ -17,7 +17,7 @@ import com.wamk.studantregistration.repositories.StudentRegistrationRepository;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
-class ProdutoServiceTest {
+class StudentRegistrationServiceTest {
 
 	@Autowired
 	StudentRegistrationRepository repository;

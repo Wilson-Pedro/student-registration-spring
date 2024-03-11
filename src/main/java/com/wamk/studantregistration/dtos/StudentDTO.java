@@ -19,7 +19,7 @@ public class StudentDTO {
 	public StudentDTO() {
 	}
 
-	public StudentDTO(String name, @NotBlank String registration, @NotBlank String period, @NotBlank String course) {
+	public StudentDTO(String name, String registration, String period, String course) {
 		super();
 		this.name = name;
 		this.registration = registration;
